@@ -16,6 +16,251 @@ import {
   INITIAL_NOTIFICATIONS
 } from '../data';
 
+// Helper to safely parse array from db
+const parseArray = (val: any): string[] => {
+  if (Array.isArray(val)) return val;
+  if (typeof val === 'string') {
+    try {
+      return JSON.parse(val);
+    } catch {
+      return val.split(',').map(s => s.trim()).filter(Boolean);
+    }
+  }
+  return [];
+};
+
+// Map DB Profile to Profile
+const mapProfileFromDB = (row: any): Profile => {
+  return {
+    id: row.id,
+    username: row.username,
+    displayName: row.display_name || row.username,
+    avatarUrl: row.avatar_url || `https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&h=150&q=80`,
+    tagline: row.tagline || '',
+    bio: row.bio || '',
+    location: row.location || '',
+    primaryStack: parseArray(row.primary_stack),
+    lookingFor: parseArray(row.looking_for) as any,
+    website: row.website_url || undefined,
+    twitter: row.twitter_handle || undefined,
+    github: row.github_handle || undefined,
+    linkedin: row.linkedin_url || undefined,
+    isVerified: !!row.is_verified,
+    isBanned: !!row.is_banned,
+    plan: (row.plan === 'pro' ? 'pro' : 'free') as any,
+    onboardedAt: row.onboarded_at || undefined,
+    createdAt: row.created_at || new Date().toISOString()
+  };
+};
+
+// Map Profile to DB Profile
+const mapProfileToDB = (p: Profile, userId?: string) => {
+  return {
+    id: p.id || userId,
+    username: p.username,
+    display_name: p.displayName,
+    avatar_url: p.avatarUrl,
+    tagline: p.tagline,
+    bio: p.bio || '',
+    location: p.location,
+    primary_stack: p.primaryStack,
+    looking_for: p.lookingFor,
+    website_url: p.website || '',
+    twitter_handle: p.twitter || '',
+    github_handle: p.github || '',
+    linkedin_url: p.linkedin || '',
+    is_verified: p.isVerified,
+    is_banned: p.isBanned,
+    plan: p.plan,
+    onboarded_at: p.onboardedAt || null,
+    created_at: p.createdAt
+  };
+};
+
+// Map DB Product to Product
+const mapProductFromDB = (row: any): Product => {
+  return {
+    id: row.id,
+    name: row.name || 'Unnamed Product',
+    slug: row.slug || '',
+    tagline: row.tagline || '',
+    description: row.description || '',
+    logoUrl: row.logo_url || '🚀',
+    coverUrl: row.cover_url || undefined,
+    status: (row.status || 'beta') as any,
+    primaryStack: parseArray(row.primary_stack),
+    demoUrl: row.demo_url || undefined,
+    repoUrl: row.repo_url || undefined,
+    mrrRange: row.mrr_range || '$0/mo',
+    mrrExact: row.mrr_exact || undefined,
+    targetMarket: row.target_market || undefined,
+    tags: parseArray(row.primary_stack),
+    screenshots: [],
+    askingPrice: row.asking_price || undefined,
+    acquisitionRationale: row.acquisition_rationale || undefined,
+    upvotesCount: row.upvotes_count || 0,
+    viewsCount: row.views_count || 0,
+    savesCount: row.saves_count || 0,
+    isBoosted: !!row.is_boosted,
+    isFeatured: !!row.is_featured,
+    founderUsername: row.founder_id || '',
+    createdAt: row.created_at || new Date().toISOString(),
+    isPublished: row.is_published !== false
+  };
+};
+
+// Map Product to DB Product
+const mapProductToDB = (p: Product, founderId: string) => {
+  return {
+    id: p.id,
+    founder_id: founderId,
+    name: p.name,
+    slug: p.slug,
+    tagline: p.tagline,
+    description: p.description,
+    logo_url: p.logoUrl,
+    cover_url: p.coverUrl || '',
+    primary_stack: p.primaryStack,
+    demo_url: p.demoUrl || '',
+    repo_url: p.repoUrl || '',
+    status: p.status,
+    mrr_range: p.mrrRange,
+    mrr_exact: p.mrrExact || null,
+    target_market: p.targetMarket || '',
+    asking_price: p.askingPrice || null,
+    acquisition_rationale: p.acquisitionRationale || '',
+    upvotes_count: p.upvotesCount,
+    saves_count: p.savesCount,
+    views_count: p.viewsCount,
+    is_boosted: p.isBoosted,
+    is_published: p.isPublished,
+    is_featured: p.isFeatured,
+    created_at: p.createdAt
+  };
+};
+
+// Map DB Idea to Idea
+const mapIdeaFromDB = (row: any): Idea => {
+  return {
+    id: row.id,
+    title: row.title || 'Untitled Idea',
+    problem: row.problem || '',
+    solution: row.solution || undefined,
+    targetAudience: row.target_audience || '',
+    monetizationHint: row.monetization_hint || undefined,
+    inspirationUrl: row.inspiration_url || undefined,
+    tags: [],
+    authorUsername: row.author_id || '',
+    swipeRightCount: row.swipe_right_count || 0,
+    swipeLeftCount: 0,
+    status: (row.status || 'open') as any,
+    claimedBy: row.claimed_by || undefined,
+    isPublished: row.is_published !== false,
+    isBoosted: !!row.is_boosted,
+    createdAt: row.created_at || new Date().toISOString()
+  };
+};
+
+// Map Idea to DB Idea
+const mapIdeaToDB = (i: Idea, authorId: string) => {
+  return {
+    id: i.id,
+    author_id: authorId,
+    title: i.title,
+    problem: i.problem,
+    solution: i.solution || '',
+    target_audience: i.targetAudience,
+    monetization_hint: i.monetizationHint || '',
+    inspiration_url: i.inspirationUrl || '',
+    status: i.status,
+    swipe_right_count: i.swipeRightCount,
+    claimed_by: i.claimedBy || null,
+    is_published: i.isPublished,
+    is_boosted: i.isBoosted,
+    created_at: i.createdAt
+  };
+};
+
+// Map DB Comment to Comment
+const mapCommentFromDB = (row: any): Comment => {
+  return {
+    id: row.id,
+    targetId: row.product_id || row.idea_id || '',
+    targetType: row.product_id ? 'product' : 'idea',
+    authorUsername: row.author_id || '',
+    content: row.body || '',
+    createdAt: row.created_at || new Date().toISOString(),
+    upvotes: row.upvotes || 0
+  };
+};
+
+// Map Comment to DB Comment
+const mapCommentToDB = (c: Comment, authorId: string) => {
+  return {
+    id: c.id,
+    author_id: authorId,
+    product_id: c.targetType === 'product' ? c.targetId : null,
+    idea_id: c.targetType === 'idea' ? c.targetId : null,
+    body: c.content,
+    upvotes: c.upvotes,
+    created_at: c.createdAt
+  };
+};
+
+// Map DB Match to Match
+const mapMatchFromDB = (row: any): Match => {
+  return {
+    id: row.id,
+    type: (row.intent || 'founder') as any,
+    user1: row.initiator_id || '',
+    user2: row.receiver_id || '',
+    status: (row.status || 'active') as any,
+    createdAt: row.created_at || new Date().toISOString(),
+    lastMessageAt: row.updated_at || row.created_at || new Date().toISOString(),
+    lastMessageText: undefined
+  };
+};
+
+// Map Match to DB Match
+const mapMatchToDB = (m: Match, initiatorId: string, receiverId: string) => {
+  return {
+    id: m.id,
+    deck: m.type === 'founder' ? 'founders' : 'products',
+    status: m.status,
+    intent: m.type,
+    initiator_id: initiatorId,
+    receiver_id: receiverId,
+    product_id: null,
+    idea_id: null,
+    created_at: m.createdAt,
+    updated_at: m.lastMessageAt
+  };
+};
+
+// Map DB Message to Message
+const mapMessageFromDB = (row: any): Message => {
+  return {
+    id: row.id,
+    conversationId: row.conversation_id || '',
+    senderUsername: row.sender_id || '',
+    content: row.body || '',
+    sentAt: row.sent_at || new Date().toISOString(),
+    isRead: !!row.is_read
+  };
+};
+
+// Map Message to DB Message
+const mapMessageToDB = (m: Message, senderId: string) => {
+  return {
+    id: m.id,
+    conversation_id: m.conversationId,
+    sender_id: senderId,
+    body: m.content,
+    is_read: m.isRead,
+    sent_at: m.sentAt
+  };
+};
+
 interface AppContextType {
   currentUser: Profile | null;
   profiles: Profile[];
@@ -146,7 +391,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return saved ? Number(saved) : 0;
   });
 
-  const [activeView, setActiveView] = useState<string>('landing');
+  const [activeView, setActiveViewInternal] = useState<string>(() => {
+    const hash = window.location.hash.replace('#', '');
+    return hash || 'landing';
+  });
+
+  const setActiveView = (view: string | ((prev: string) => string)) => {
+    setActiveViewInternal(prev => {
+      const nextView = typeof view === 'function' ? view(prev) : view;
+      window.location.hash = nextView;
+      return nextView;
+    });
+  };
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash && hash !== activeView) {
+        setActiveViewInternal(hash);
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [activeView]);
   const [selectedMatchId, setSelectedMatchId] = useState<string | null>(null);
   const [activeDealRoomMatchId, setActiveDealRoomMatchId] = useState<string | null>(null);
   const [viewingProfileUsername, setViewingProfileUsername] = useState<string | null>(null);
@@ -235,6 +502,123 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
+  // Load data from Supabase at startup
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase) return;
+
+    const loadSupabaseData = async () => {
+      try {
+        console.log('[Supabase] Initializing real-time database synchronization...');
+        
+        // 1. Fetch Profiles
+        const { data: dbProfiles, error: pErr } = await supabase
+          .from('profiles')
+          .select('*');
+        if (dbProfiles && !pErr) {
+          const mapped = dbProfiles.map(mapProfileFromDB);
+          setProfiles(prev => {
+            const merged = [...prev];
+            mapped.forEach(mp => {
+              const idx = merged.findIndex(p => p.username === mp.username);
+              if (idx !== -1) merged[idx] = mp;
+              else merged.push(mp);
+            });
+            return merged;
+          });
+        }
+
+        // 2. Fetch Products
+        const { data: dbProducts, error: prodErr } = await supabase
+          .from('products')
+          .select('*');
+        if (dbProducts && !prodErr) {
+          const mapped = dbProducts.map(mapProductFromDB);
+          setProducts(prev => {
+            const merged = [...prev];
+            mapped.forEach(mp => {
+              const idx = merged.findIndex(p => p.id === mp.id);
+              if (idx !== -1) merged[idx] = mp;
+              else merged.push(mp);
+            });
+            return merged;
+          });
+        }
+
+        // 3. Fetch Ideas
+        const { data: dbIdeas, error: ideaErr } = await supabase
+          .from('ideas')
+          .select('*');
+        if (dbIdeas && !ideaErr) {
+          const mapped = dbIdeas.map(mapIdeaFromDB);
+          setIdeas(prev => {
+            const merged = [...prev];
+            mapped.forEach(mi => {
+              const idx = merged.findIndex(i => i.id === mi.id);
+              if (idx !== -1) merged[idx] = mi;
+              else merged.push(mi);
+            });
+            return merged;
+          });
+        }
+
+        // 4. Fetch Comments
+        const { data: dbComments, error: commErr } = await supabase
+          .from('comments')
+          .select('*');
+        if (dbComments && !commErr) {
+          const mapped = dbComments.map(mapCommentFromDB);
+          setComments(prev => {
+            const merged = [...prev];
+            mapped.forEach(mc => {
+              const idx = merged.findIndex(c => c.id === mc.id);
+              if (idx !== -1) merged[idx] = mc;
+              else merged.push(mc);
+            });
+            return merged;
+          });
+        }
+
+        // 5. Fetch Matches
+        const { data: dbMatches, error: matchErr } = await supabase
+          .from('matches')
+          .select('*');
+        if (dbMatches && !matchErr) {
+          const mapped = dbMatches.map(mapMatchFromDB);
+          setMatches(prev => {
+            const merged = [...prev];
+            mapped.forEach(mm => {
+              const idx = merged.findIndex(m => m.id === mm.id);
+              if (idx !== -1) merged[idx] = mm;
+              else merged.push(mm);
+            });
+            return merged;
+          });
+        }
+
+        // 6. Fetch Messages
+        const { data: dbMessages, error: msgErr } = await supabase
+          .from('messages')
+          .select('*');
+        if (dbMessages && !msgErr) {
+          const mapped = dbMessages.map(mapMessageFromDB);
+          setMessages(prev => {
+            const merged = [...prev];
+            mapped.forEach(mm => {
+              const idx = merged.findIndex(m => m.id === mm.id);
+              if (idx !== -1) merged[idx] = mm;
+              else merged.push(mm);
+            });
+            return merged;
+          });
+        }
+      } catch (err) {
+        console.error('[Supabase Load Error]', err);
+      }
+    };
+
+    loadSupabaseData();
+  }, [isSupabaseConfigured]);
+
   // Listen to Supabase Auth State Changes
   useEffect(() => {
     if (!isSupabaseConfigured || !supabase) return;
@@ -262,41 +646,68 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return () => {
       subscription.unsubscribe();
     };
-  }, [profiles]);
+  }, []);
 
   const handleSupabaseUser = async (user: any) => {
     const username = user.user_metadata?.user_name || user.email?.split('@')[0] || `user_${user.id.slice(0, 8)}`;
     const displayName = user.user_metadata?.full_name || user.user_metadata?.name || username;
     const avatarUrl = user.user_metadata?.avatar_url || `https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&h=150&q=80`;
 
-    // Try to find the profile in our state list
-    let existingProfile = profiles.find(p => p.username === username);
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .maybeSingle();
 
-    if (!existingProfile) {
-      // Create new profile (unonboarded)
-      const newProfile: Profile = {
-        username,
-        displayName,
-        avatarUrl,
-        tagline: '',
-        location: '',
-        primaryStack: [],
-        lookingFor: [],
-        isVerified: false,
-        isBanned: false,
-        plan: 'free',
-        createdAt: new Date().toISOString()
-      };
-      setProfiles(prev => [...prev, newProfile]);
-      setCurrentUser(newProfile);
-      setActiveView('onboarding');
-    } else {
-      setCurrentUser(existingProfile);
-      if (!existingProfile.onboardedAt) {
-        setActiveView('onboarding');
-      } else {
-        setActiveView(prev => (prev === 'landing' || prev === 'onboarding') ? 'products' : prev);
+        if (data && !error) {
+          const profile = mapProfileFromDB(data);
+          setCurrentUser(profile);
+          setProfiles(prev => {
+            const filtered = prev.filter(p => p.username !== profile.username);
+            return [...filtered, profile];
+          });
+          if (!profile.onboardedAt) {
+            setActiveView('onboarding');
+          } else {
+            setActiveView(prev => (prev === 'landing' || prev === 'onboarding') ? 'products' : prev);
+          }
+          return;
+        }
+      } catch (err) {
+        console.error('Error loading Supabase profile:', err);
       }
+    }
+
+    // Fallback/First-time login: create new profile row
+    const newProfile: Profile = {
+      id: user.id,
+      username,
+      displayName,
+      avatarUrl,
+      tagline: '',
+      location: '',
+      primaryStack: [],
+      lookingFor: [],
+      isVerified: false,
+      isBanned: false,
+      plan: 'free',
+      createdAt: new Date().toISOString()
+    };
+
+    setProfiles(prev => {
+      const filtered = prev.filter(p => p.username !== newProfile.username);
+      return [...filtered, newProfile];
+    });
+    setCurrentUser(newProfile);
+    setActiveView('onboarding');
+
+    if (isSupabaseConfigured && supabase) {
+      const dbProfile = mapProfileToDB(newProfile, user.id);
+      supabase.from('profiles').upsert(dbProfile).then(({ error }) => {
+        if (error) console.error('[Supabase] Initial profile creation failed:', error.message);
+      });
     }
   };
 
@@ -399,6 +810,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setProfiles(prev => prev.map(p => p.username === currentUser.username ? updatedUser : p));
     setCurrentUser(updatedUser);
     setActiveView('products');
+
+    if (isSupabaseConfigured && supabase && currentUser.id) {
+      const dbProfile = mapProfileToDB(updatedUser, currentUser.id);
+      supabase.from('profiles').upsert(dbProfile).then(({ error }) => {
+        if (error) console.error('[Supabase] Profile upsert failed on onboarding:', error.message);
+      });
+    }
   };
 
   const recordSwipe = (deck: 'products' | 'ideas' | 'founders', targetId: string, direction: 'left' | 'right' | 'up') => {
@@ -414,6 +832,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     // Swipes Limit check for free users
     if (currentUser.plan === 'free') {
       setSwipesCountToday(prev => prev + 1);
+    }
+
+    if (isSupabaseConfigured && supabase && currentUser.id) {
+      const dbSwipe = {
+        id: `sw_${Date.now()}`,
+        swiper_id: currentUser.id,
+        deck: deck,
+        direction: direction,
+        target_product_id: deck === 'products' ? targetId : null,
+        target_idea_id: deck === 'ideas' ? targetId : null,
+        target_founder_id: deck === 'founders' ? targetId : null,
+        swiped_at: new Date().toISOString()
+      };
+      supabase.from('swipes').insert(dbSwipe).then(({ error }) => {
+        if (error) {
+          console.warn('[Supabase] Swipe insert failed (target might be mock):', error.message);
+        }
+      });
     }
 
     // Right/Up swipe triggers action
@@ -559,6 +995,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
 
     setProducts(prev => [newProduct, ...prev]);
+
+    if (isSupabaseConfigured && supabase && currentUser.id) {
+      const dbProduct = mapProductToDB(newProduct, currentUser.id);
+      supabase.from('products').insert(dbProduct).then(({ error }) => {
+        if (error) console.error('[Supabase] Product insert failed:', error.message);
+      });
+    }
   };
 
   const submitIdea = (ideaData: Partial<Idea>) => {
@@ -583,6 +1026,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
 
     setIdeas(prev => [newIdea, ...prev]);
+
+    if (isSupabaseConfigured && supabase && currentUser.id) {
+      const dbIdea = mapIdeaToDB(newIdea, currentUser.id);
+      supabase.from('ideas').insert(dbIdea).then(({ error }) => {
+        if (error) console.error('[Supabase] Idea insert failed:', error.message);
+      });
+    }
   };
 
   const claimIdea = (ideaId: string) => {
@@ -646,6 +1096,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
 
     setComments(prev => [...prev, newComment]);
+
+    if (isSupabaseConfigured && supabase && currentUser.id) {
+      const dbComment = mapCommentToDB(newComment, currentUser.id);
+      supabase.from('comments').insert(dbComment).then(({ error }) => {
+        if (error) {
+          console.warn('[Supabase] Comment insert failed/ignored (likely mock target):', error.message);
+        }
+      });
+    }
   };
 
   const upvoteComment = (commentId: string) => {
@@ -681,6 +1140,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
       return m;
     }));
+
+    if (isSupabaseConfigured && supabase && currentUser.id) {
+      const dbMsg = mapMessageToDB(newMsg, currentUser.id);
+      supabase.from('messages').insert(dbMsg).then(({ error }) => {
+        if (error) {
+          console.warn('[Supabase] Message insert failed:', error.message);
+        }
+      });
+
+      supabase.from('matches').update({ updated_at: newMsg.sentAt }).eq('id', conversationId).then(({ error }) => {
+        if (error) console.warn('[Supabase] Match timestamp update failed:', error.message);
+      });
+    }
 
     // Simulate response in founder deck chat
     const match = matches.find(m => m.id === conversationId);
@@ -736,6 +1208,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const updated = { ...currentUser, ...profileData };
     setProfiles(prev => prev.map(p => p.username === currentUser.username ? updated : p));
     setCurrentUser(updated);
+
+    if (isSupabaseConfigured && supabase && currentUser.id) {
+      const dbProfile = mapProfileToDB(updated, currentUser.id);
+      supabase.from('profiles').upsert(dbProfile).then(({ error }) => {
+        if (error) console.error('[Supabase] Profile update failed:', error.message);
+      });
+    }
   };
 
   const upgradeToPro = () => {
@@ -743,6 +1222,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const updated: Profile = { ...currentUser, plan: 'pro' };
     setProfiles(prev => prev.map(p => p.username === currentUser.username ? updated : p));
     setCurrentUser(updated);
+
+    if (isSupabaseConfigured && supabase && currentUser.id) {
+      supabase.from('profiles').update({ plan: 'pro' }).eq('id', currentUser.id).then(({ error }) => {
+        if (error) console.error('[Supabase] Upgrade to Pro failed:', error.message);
+      });
+    }
   };
 
   const purchaseBoost = (type: 'product' | 'idea' | 'founder', targetId: string) => {
