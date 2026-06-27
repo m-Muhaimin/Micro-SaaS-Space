@@ -66,6 +66,10 @@ function DashboardShell() {
 
   if (!currentUser) return <LandingPage />;
 
+  if (activeView === 'onboarding' || !currentUser.onboardedAt) {
+    return <OnboardingWizard />;
+  }
+
   // 1. FILTER DECKS TO PREVENT RE-SWIPING ALREADY SWIPED ITEMS
   const unswipedProducts = products.filter(p => {
     // Exclude own products and non-published

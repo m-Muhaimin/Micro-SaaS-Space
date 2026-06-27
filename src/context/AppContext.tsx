@@ -5,6 +5,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product, Idea, Profile, Comment, Match, Message, AppNotification, DealRoomState } from '../types';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import {
   INITIAL_PROFILES,
   INITIAL_PRODUCTS,
@@ -47,6 +48,7 @@ interface AppContextType {
   
   // Actions
   loginWithGitHub: () => void;
+  loginWithGoogle: () => void;
   logout: () => void;
   completeOnboarding: (tagline: string, location: string, stack: string[], lookingFor: any[]) => void;
   recordSwipe: (deck: 'products' | 'ideas' | 'founders', targetId: string, direction: 'left' | 'right' | 'up') => { matched: boolean; matchId?: string };
@@ -233,21 +235,150 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  // Actions
-  const loginWithGitHub = () => {
-    // Default mock user is skeedo
-    const defaultUser = profiles.find(p => p.username === 'skeedo') || profiles[0];
-    setCurrentUser(defaultUser);
-    
-    // Redirect based on onboarding
-    if (!defaultUser.onboardedAt) {
+  // Listen to Supabase Auth State Changes
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase) return;
+
+    // Check initial session
+    const checkInitialSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        handleSupabaseUser(session.user);
+      }
+    };
+
+    checkInitialSession();
+
+    // Subscribe to auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session?.user) {
+        handleSupabaseUser(session.user);
+      } else if (event === 'SIGNED_OUT') {
+        setCurrentUser(null);
+        setActiveView('landing');
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [profiles]);
+
+  const handleSupabaseUser = async (user: any) => {
+    const username = user.user_metadata?.user_name || user.email?.split('@')[0] || `user_${user.id.slice(0, 8)}`;
+    const displayName = user.user_metadata?.full_name || user.user_metadata?.name || username;
+    const avatarUrl = user.user_metadata?.avatar_url || `https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&h=150&q=80`;
+
+    // Try to find the profile in our state list
+    let existingProfile = profiles.find(p => p.username === username);
+
+    if (!existingProfile) {
+      // Create new profile (unonboarded)
+      const newProfile: Profile = {
+        username,
+        displayName,
+        avatarUrl,
+        tagline: '',
+        location: '',
+        primaryStack: [],
+        lookingFor: [],
+        isVerified: false,
+        isBanned: false,
+        plan: 'free',
+        createdAt: new Date().toISOString()
+      };
+      setProfiles(prev => [...prev, newProfile]);
+      setCurrentUser(newProfile);
       setActiveView('onboarding');
     } else {
-      setActiveView('products');
+      setCurrentUser(existingProfile);
+      if (!existingProfile.onboardedAt) {
+        setActiveView('onboarding');
+      } else {
+        setActiveView(prev => (prev === 'landing' || prev === 'onboarding') ? 'products' : prev);
+      }
     }
   };
 
-  const logout = () => {
+  // Actions
+  const loginWithGitHub = async () => {
+    if (isSupabaseConfigured && supabase) {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: {
+          redirectTo: window.location.origin
+        }
+      });
+      if (error) console.error('GitHub OAuth error:', error);
+    } else {
+      // Simulate/mock login for test/dev
+      // Generate a new mock user with onboardedAt = undefined to trigger OnboardingWizard
+      const testUser: Profile = {
+        username: 'skeedo_dev',
+        displayName: 'Skeedo (Dev)',
+        avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&h=150&q=80',
+        tagline: '',
+        location: 'Dhaka, Bangladesh',
+        primaryStack: ['Next.js', 'React'],
+        lookingFor: [],
+        isVerified: true,
+        isBanned: false,
+        plan: 'pro',
+        createdAt: new Date().toISOString()
+      };
+
+      setProfiles(prev => {
+        if (!prev.some(p => p.username === testUser.username)) {
+          return [...prev, testUser];
+        }
+        return prev;
+      });
+      setCurrentUser(testUser);
+      setActiveView('onboarding');
+    }
+  };
+
+  const loginWithGoogle = async () => {
+    if (isSupabaseConfigured && supabase) {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin
+        }
+      });
+      if (error) console.error('Google OAuth error:', error);
+    } else {
+      // Simulate/mock login for test/dev
+      // Generate a new mock user with onboardedAt = undefined to trigger OnboardingWizard
+      const testUser: Profile = {
+        username: 'google_dev',
+        displayName: 'Google Dev User',
+        avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&h=150&q=80',
+        tagline: '',
+        location: 'San Francisco, USA',
+        primaryStack: ['Next.js', 'Supabase'],
+        lookingFor: [],
+        isVerified: false,
+        isBanned: false,
+        plan: 'free',
+        createdAt: new Date().toISOString()
+      };
+
+      setProfiles(prev => {
+        if (!prev.some(p => p.username === testUser.username)) {
+          return [...prev, testUser];
+        }
+        return prev;
+      });
+      setCurrentUser(testUser);
+      setActiveView('onboarding');
+    }
+  };
+
+  const logout = async () => {
+    if (isSupabaseConfigured && supabase) {
+      await supabase.auth.signOut();
+    }
     setCurrentUser(null);
     setActiveView('landing');
   };
@@ -786,6 +917,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setSearchOpen,
       
       loginWithGitHub,
+      loginWithGoogle,
       logout,
       completeOnboarding,
       recordSwipe,

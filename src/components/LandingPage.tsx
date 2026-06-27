@@ -87,7 +87,8 @@ const HERO_MOCK_CARDS: MockCard[] = [
 ];
 
 export const LandingPage: React.FC = () => {
-  const { loginWithGitHub } = useApp();
+  const { loginWithGitHub, loginWithGoogle } = useApp();
+  const [authModalOpen, setAuthModalOpen] = useState(false);
   const [activeDeckTab, setActiveDeckTab] = useState<'products' | 'ideas' | 'founders'>('products');
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
 
@@ -158,7 +159,7 @@ export const LandingPage: React.FC = () => {
 
           <div className="flex items-center gap-4">
             <button
-              onClick={loginWithGitHub}
+              onClick={() => setAuthModalOpen(true)}
               className="relative inline-flex items-center gap-2 bg-[#0f172a] border border-slate-800 hover:border-indigo-600 text-xs font-mono text-slate-200 hover:text-white px-4 py-2.5 rounded-xl transition active:scale-95 cursor-pointer shadow-md hover:shadow-indigo-500/10"
             >
               <span>Sign In</span>
@@ -192,10 +193,10 @@ export const LandingPage: React.FC = () => {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
             <button
-              onClick={loginWithGitHub}
+              onClick={() => setAuthModalOpen(true)}
               className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-4 rounded-xl font-mono text-xs font-bold tracking-wide shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-2.5 transition active:scale-95 cursor-pointer hover:shadow-2xl hover:shadow-indigo-600/30"
             >
-              <span>Join Free (GitHub)</span>
+              <span>Join Free</span>
               <ArrowRight className="w-4 h-4" />
             </button>
             <button
@@ -675,7 +676,7 @@ export const LandingPage: React.FC = () => {
 
             <div className="pt-4">
               <button
-                onClick={loginWithGitHub}
+                onClick={() => setAuthModalOpen(true)}
                 className="bg-indigo-600 hover:bg-indigo-700 text-white font-mono text-xs font-bold px-6 py-4 rounded-xl shadow-xl shadow-indigo-600/20 inline-flex items-center gap-2 transition active:scale-95 cursor-pointer"
               >
                 <span>List your first product</span>
@@ -708,7 +709,7 @@ export const LandingPage: React.FC = () => {
             {/* Right side CTA Button */}
             <div className="md:col-span-4 flex justify-center sm:justify-end">
               <button
-                onClick={loginWithGitHub}
+                onClick={() => setAuthModalOpen(true)}
                 className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-mono text-xs font-bold px-6 py-4 rounded-xl shadow-xl shadow-amber-500/10 inline-flex items-center gap-2 transition active:scale-95 cursor-pointer w-full justify-center sm:w-auto"
               >
                 <span>Browse for-sale products</span>
@@ -792,7 +793,7 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <button
-              onClick={loginWithGitHub}
+              onClick={() => setAuthModalOpen(true)}
               className="mt-8 w-full bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-mono font-bold text-slate-300 hover:text-white py-3.5 rounded-xl transition cursor-pointer"
             >
               Sign In Free
@@ -849,7 +850,7 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <button
-              onClick={loginWithGitHub}
+              onClick={() => setAuthModalOpen(true)}
               className="mt-8 w-full bg-indigo-600 hover:bg-indigo-700 text-xs font-mono font-bold text-white py-3.5 rounded-xl transition shadow-lg shadow-indigo-600/20 cursor-pointer"
             >
               Unlock Pro Access
@@ -951,9 +952,9 @@ export const LandingPage: React.FC = () => {
           <div className="col-span-1 md:col-span-2 text-left space-y-3">
             <h4 className="text-xs font-bold font-mono text-slate-300 uppercase tracking-wider">Acquisition</h4>
             <ul className="space-y-2 font-mono">
-              <li><button onClick={loginWithGitHub} className="hover:text-slate-300 transition">For Sale List</button></li>
-              <li><button onClick={loginWithGitHub} className="hover:text-slate-300 transition">Buyer Escrow</button></li>
-              <li><button onClick={loginWithGitHub} className="hover:text-slate-300 transition">Invoice Generator</button></li>
+              <li><button onClick={() => setAuthModalOpen(true)} className="hover:text-slate-300 transition">For Sale List</button></li>
+              <li><button onClick={() => setAuthModalOpen(true)} className="hover:text-slate-300 transition">Buyer Escrow</button></li>
+              <li><button onClick={() => setAuthModalOpen(true)} className="hover:text-slate-300 transition">Invoice Generator</button></li>
             </ul>
           </div>
 
@@ -963,7 +964,7 @@ export const LandingPage: React.FC = () => {
             <ul className="space-y-2 font-mono">
               <li><button onClick={() => scrollToSection('pricing')} className="hover:text-slate-300 transition">Founder Pro</button></li>
               <li><button onClick={() => scrollToSection('pricing')} className="hover:text-slate-300 transition">Billing Table</button></li>
-              <li><button onClick={loginWithGitHub} className="hover:text-slate-300 transition">Pro Refund Policy</button></li>
+              <li><button onClick={() => setAuthModalOpen(true)} className="hover:text-slate-300 transition">Pro Refund Policy</button></li>
             </ul>
           </div>
 
@@ -982,13 +983,97 @@ export const LandingPage: React.FC = () => {
         {/* Legal disclosures */}
         <div className="max-w-7xl mx-auto px-6 md:px-8 pt-8 border-t border-slate-900 flex flex-col sm:flex-row justify-between items-center gap-4 text-slate-600">
           <div className="flex gap-4">
-            <a href="#" onClick={(e) => { e.preventDefault(); loginWithGitHub(); }} className="hover:text-slate-400">Terms of Use</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); loginWithGitHub(); }} className="hover:text-slate-400">Privacy Protocols</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); loginWithGitHub(); }} className="hover:text-slate-400">Security Disclosures</a>
+            <a href="#" onClick={(e) => { e.preventDefault(); setAuthModalOpen(true); }} className="hover:text-slate-400">Terms of Use</a>
+            <a href="#" onClick={(e) => { e.preventDefault(); setAuthModalOpen(true); }} className="hover:text-slate-400">Privacy Protocols</a>
+            <a href="#" onClick={(e) => { e.preventDefault(); setAuthModalOpen(true); }} className="hover:text-slate-400">Security Disclosures</a>
           </div>
           <p className="text-[10px]">Made with ☕ and passion by Skeedo. All rights reserved.</p>
         </div>
       </footer>
+
+      {/* AUTHENTICATION MODAL */}
+      <AnimatePresence>
+        {authModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setAuthModalOpen(false)}
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            />
+
+            {/* Modal Box */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ duration: 0.2 }}
+              className="relative w-full max-w-md bg-slate-950 border border-slate-900 rounded-2xl overflow-hidden p-6 md:p-8 text-center shadow-2xl shadow-indigo-500/10"
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setAuthModalOpen(false)}
+                className="absolute top-4 right-4 text-slate-500 hover:text-slate-300 transition text-sm font-mono cursor-pointer"
+              >
+                [Esc]
+              </button>
+
+              <div className="space-y-6">
+                {/* Header */}
+                <div className="space-y-2">
+                  <div className="inline-flex p-3 bg-indigo-600/10 border border-indigo-600/20 rounded-full text-indigo-400">
+                    <Users className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-xl font-bold font-mono text-white tracking-tight">
+                    Join microsaas.space
+                  </h3>
+                  <p className="text-xs text-slate-400 font-sans max-w-sm mx-auto">
+                    The swipe-first hub where solo founders discover products, validate ideas, and find collaborators.
+                  </p>
+                </div>
+
+                {/* Login Options */}
+                <div className="space-y-3 pt-2">
+                  <button
+                    onClick={() => {
+                      setAuthModalOpen(false);
+                      loginWithGitHub();
+                    }}
+                    className="w-full inline-flex items-center justify-center gap-3 bg-white hover:bg-slate-100 text-black font-semibold font-mono text-xs px-4 py-3 rounded-xl transition active:scale-98 shadow-md cursor-pointer"
+                  >
+                    <Code className="w-4 h-4 text-slate-800" />
+                    <span>Continue with GitHub</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setAuthModalOpen(false);
+                      loginWithGoogle();
+                    }}
+                    className="w-full inline-flex items-center justify-center gap-3 bg-slate-900 hover:bg-slate-850 text-white border border-slate-800 font-semibold font-mono text-xs px-4 py-3 rounded-xl transition active:scale-98 shadow-md cursor-pointer"
+                  >
+                    <Globe className="w-4 h-4 text-slate-300" />
+                    <span>Continue with Google</span>
+                  </button>
+                </div>
+
+                {/* Developer / Security Disclaimer */}
+                <div className="bg-slate-900/40 border border-slate-900 p-4 rounded-xl text-left space-y-1.5 text-[11px] font-sans text-slate-400 leading-normal">
+                  <div className="flex items-center gap-1.5 font-semibold text-slate-300 font-mono">
+                    <Shield className="w-3.5 h-3.5 text-indigo-400" />
+                    <span>SECURE SOCIAL-ONLY AUTH</span>
+                  </div>
+                  <p>
+                    We enforce social-only logins to eliminate phishing and password spam, verifying that only real builders can post products, claim ideas, or DM co-builders.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
     </div>
   );
