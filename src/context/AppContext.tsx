@@ -34,6 +34,7 @@ interface AppContextType {
   viewingProfileUsername: string | null;
   activeExploreTab: 'products' | 'ideas' | 'founders';
   searchOpen: boolean;
+  setMatches: React.Dispatch<React.SetStateAction<Match[]>>;
   
   // State Setters & Navigation
   setCurrentUser: (profile: Profile | null) => void;
@@ -774,6 +775,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       viewingProfileUsername,
       activeExploreTab,
       searchOpen,
+      setMatches,
       
       setCurrentUser,
       setActiveView,
