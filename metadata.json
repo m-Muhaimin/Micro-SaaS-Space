@@ -1,0 +1,6 @@
+{
+  "name": "microsaas.space",
+  "description": "A swipe-first platform where solo founders discover products, validate ideas, and find collaborators.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
