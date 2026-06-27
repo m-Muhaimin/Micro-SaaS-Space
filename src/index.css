@@ -9,8 +9,8 @@
 
 /* Base resets & styled scrollbars for micro-SaaS dark aesthetics */
 body {
-  background-color: #0A0A0A;
-  color: #FAFAFA;
+  background-color: #020617;
+  color: #e2e8f0;
   font-family: var(--font-sans);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -22,16 +22,17 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0A0A0A;
+  background: #020617;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1C1C1C;
+  background: #0f172a;
+  border: 1px solid #1e293b;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #252525;
+  background: #1e293b;
 }
 
 /* Keyframe Animations */

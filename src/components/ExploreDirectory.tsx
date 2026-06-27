@@ -5,7 +5,8 @@
 
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Search, Sparkles, Lightbulb, Users, SlidersHorizontal, Heart, MessageSquare, ArrowRight, Star } from 'lucide-react';
+import { Search, Sparkles, Lightbulb, Users, SlidersHorizontal, Heart, MessageSquare, ArrowRight, Star, HelpCircle } from 'lucide-react';
+import { EmptyState } from './EmptyState';
 import { Product, Idea, Profile } from '../types';
 
 interface ExploreDirectoryProps {
@@ -144,8 +145,15 @@ export const ExploreDirectory: React.FC<ExploreDirectoryProps> = ({ onProductSel
         {activeExploreTab === 'products' && (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredProducts.length === 0 ? (
-              <div className="col-span-full text-center py-16 text-zinc-500 text-xs">
-                No products found matching those search criteria.
+              <div className="col-span-full">
+                <EmptyState
+                  icon={Search}
+                  title="No Matching Products"
+                  description="We couldn't find any products matching your current tag filters or query. Try resetting your search terms."
+                  actionText="Clear Search Query"
+                  onActionClick={() => setSearchQuery('')}
+                  badge="Search Empty"
+                />
               </div>
             ) : (
               filteredProducts.map(p => (
@@ -195,8 +203,18 @@ export const ExploreDirectory: React.FC<ExploreDirectoryProps> = ({ onProductSel
         {activeExploreTab === 'ideas' && (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredIdeas.length === 0 ? (
-              <div className="col-span-full text-center py-16 text-zinc-500 text-xs">
-                No validation ideas found matching those search criteria.
+              <div className="col-span-full">
+                <EmptyState
+                  icon={Search}
+                  title="No Matching Ideas"
+                  description="We couldn't find any validation ideas matching your current filters or query. Try refining your selection."
+                  actionText="Reset Search Filters"
+                  onActionClick={() => { setSearchQuery(''); setSelectedTag('all'); }}
+                  badge="Search Empty"
+                  iconColorClass="text-amber-400"
+                  borderColorClass="border-amber-500/20"
+                  glowColorClass="bg-amber-500/10"
+                />
               </div>
             ) : (
               filteredIdeas.map(i => {
@@ -240,8 +258,18 @@ export const ExploreDirectory: React.FC<ExploreDirectoryProps> = ({ onProductSel
         {activeExploreTab === 'founders' && (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredFounders.length === 0 ? (
-              <div className="col-span-full text-center py-16 text-zinc-500 text-xs">
-                No co-builders matched those search parameters.
+              <div className="col-span-full">
+                <EmptyState
+                  icon={Search}
+                  title="No Matching Co-Builders"
+                  description="No founders matched your selected stack tag or name search query. Try broadening your criteria."
+                  actionText="Reset Search Filters"
+                  onActionClick={() => { setSearchQuery(''); setSelectedTag('all'); }}
+                  badge="Search Empty"
+                  iconColorClass="text-emerald-400"
+                  borderColorClass="border-emerald-500/20"
+                  glowColorClass="bg-emerald-500/10"
+                />
               </div>
             ) : (
               filteredFounders.map(f => (

@@ -18,6 +18,7 @@ import { UserProfile } from './components/UserProfile';
 import { SettingsPage } from './components/SettingsPage';
 import { AdminPanel } from './components/AdminPanel';
 import { CommandPalette } from './components/CommandPalette';
+import { EmptyState } from './components/EmptyState';
 import { Product, Idea } from './types';
 
 import { 
@@ -95,27 +96,27 @@ function DashboardShell() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-[#FAFAFA] flex flex-col font-sans select-none pb-12 md:pb-0">
+    <div className="min-h-screen bg-[#020617] text-[#e2e8f0] flex flex-col font-sans select-none pb-12 md:pb-0">
       
       {/* 1. TOP HEADER BAR */}
-      <header className="sticky top-0 bg-[#0A0A0A]/95 border-b border-[#2A2A2A] z-30 px-4 md:px-6 py-3.5 flex justify-between items-center backdrop-blur-md">
+      <header className="sticky top-0 bg-[#020617]/95 border-b border-slate-800 z-30 px-4 md:px-6 py-3.5 flex justify-between items-center backdrop-blur-md">
         <div className="flex items-center gap-6">
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => { setViewingProfileUsername(null); setActiveView('products'); }}>
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-[#6366F1] to-[#4F46E5] flex items-center justify-center font-bold font-mono text-xs text-white">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-[#4f46e5] to-[#818cf8] flex items-center justify-center font-bold font-mono text-xs text-white">
               M
             </div>
-            <span className="font-mono font-bold text-sm tracking-tight hidden sm:inline">microsaas<span className="text-[#6366F1]">.space</span></span>
+            <span className="font-mono font-bold text-sm tracking-tight hidden sm:inline">microsaas<span className="text-indigo-400">.space</span></span>
           </div>
 
           {/* Global Search command trigger bar */}
           <button 
             onClick={() => setSearchOpen(true)}
-            className="hidden md:flex items-center gap-3 bg-[#111111] hover:bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl px-4 py-2 text-xs text-zinc-400 transition cursor-pointer"
+            className="hidden md:flex items-center gap-3 bg-[#0f172a] hover:bg-slate-800 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-400 transition cursor-pointer"
           >
-            <Search className="w-3.5 h-3.5 text-zinc-500" />
+            <Search className="w-3.5 h-3.5 text-slate-500" />
             <span>Search or command...</span>
-            <kbd className="bg-[#1C1C1C] text-[9px] px-1.5 py-0.5 rounded border border-[#2A2A2A] text-zinc-500">⌘K</kbd>
+            <kbd className="bg-slate-800 text-[9px] px-1.5 py-0.5 rounded border border-slate-800 text-slate-500">⌘K</kbd>
           </button>
         </div>
 
@@ -127,8 +128,8 @@ function DashboardShell() {
               onClick={() => setActiveView('admin')}
               className={`p-2 rounded-xl border transition ${
                 activeView === 'admin' 
-                  ? 'bg-[#6366F1]/10 border-[#6366F1] text-[#6366F1]' 
-                  : 'bg-transparent border-[#2A2A2A] hover:bg-[#111111] text-[#A1A1AA] hover:text-white'
+                  ? 'bg-indigo-600/10 border-indigo-600 text-indigo-400' 
+                  : 'bg-transparent border-slate-800 hover:bg-[#0f172a] text-slate-400 hover:text-white'
               }`}
               title="Admin Panel"
             >
@@ -142,7 +143,7 @@ function DashboardShell() {
               setNotifDrawerOpen(!notifDrawerOpen);
               if (!notifDrawerOpen) markNotificationsAsRead();
             }}
-            className="p-2 bg-[#111111] border border-[#2A2A2A] hover:border-zinc-700 rounded-xl transition text-[#A1A1AA] hover:text-white relative"
+            className="p-2 bg-[#0f172a] border border-slate-800 hover:border-slate-700 rounded-xl transition text-slate-400 hover:text-white relative"
           >
             <Bell className="w-4 h-4" />
             {unreadNotificationsCount > 0 && (
@@ -158,16 +159,16 @@ function DashboardShell() {
               setViewingProfileUsername(currentUser.username);
               setActiveView('profile');
             }}
-            className="flex items-center gap-2 px-2.5 py-1.5 bg-[#111111] border border-[#2A2A2A] hover:border-zinc-700 rounded-xl transition"
+            className="flex items-center gap-2 px-2.5 py-1.5 bg-[#0f172a] border border-slate-800 hover:border-slate-700 rounded-xl transition"
           >
             <img src={currentUser.avatarUrl} alt={currentUser.displayName} className="w-5 h-5 rounded-md object-cover" />
-            <span className="text-[10px] font-mono text-[#FAFAFA] hidden sm:inline">@{currentUser.username}</span>
+            <span className="text-[10px] font-mono text-slate-100 hidden sm:inline">@{currentUser.username}</span>
           </button>
 
           {/* Logout */}
           <button 
             onClick={logout}
-            className="p-2 bg-[#111111] border border-[#2A2A2A] hover:border-red-500/30 rounded-xl text-red-500 hover:bg-red-500/5 transition cursor-pointer"
+            className="p-2 bg-[#0f172a] border border-slate-800 hover:border-red-500/30 rounded-xl text-red-500 hover:bg-red-500/5 transition cursor-pointer"
             title="Log Out"
           >
             <LogOut className="w-4 h-4" />
@@ -176,7 +177,7 @@ function DashboardShell() {
           {/* Mobile search / menu button */}
           <button 
             onClick={() => setSearchOpen(true)}
-            className="p-2 bg-[#111111] border border-[#2A2A2A] rounded-xl text-zinc-400 md:hidden"
+            className="p-2 bg-[#0f172a] border border-slate-800 rounded-xl text-slate-400 md:hidden"
           >
             <Search className="w-4 h-4" />
           </button>
@@ -187,61 +188,61 @@ function DashboardShell() {
       <div className="flex-1 flex max-w-7xl w-full mx-auto">
         
         {/* DESKTOP LEFT SIDEBAR */}
-        <aside className="hidden md:flex flex-col justify-between w-60 border-r border-[#2A2A2A] p-4 bg-[#0A0A0A]/50 sticky top-16 h-[calc(100vh-64px)] overflow-y-auto">
+        <aside className="hidden md:flex flex-col justify-between w-60 border-r border-slate-800 p-4 bg-[#020617]/50 sticky top-16 h-[calc(100vh-64px)] overflow-y-auto">
           <div className="space-y-6">
             
             {/* SWIPE DECKS GROUP */}
             <div className="space-y-1.5">
-              <span className="text-[10px] font-mono text-zinc-500 px-3 uppercase block tracking-wider">Swipe Decks</span>
+              <span className="text-[10px] font-mono text-slate-500 px-3 uppercase block tracking-wider">Swipe Decks</span>
               
               <button
                 onClick={() => setActiveView('products')}
                 className={`w-full px-3 py-2.5 rounded-xl text-xs font-mono text-left flex items-center justify-between transition ${
-                  activeView === 'products' ? 'bg-[#1C1C1C] text-white font-bold' : 'text-zinc-400 hover:bg-[#111111] hover:text-white'
+                  activeView === 'products' ? 'bg-indigo-600/10 text-indigo-400 border border-indigo-600/20 shadow-sm shadow-indigo-500/10 font-bold' : 'text-slate-400 hover:bg-[#0f172a] hover:text-white border border-transparent'
                 }`}
               >
                 <span className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#6366F1]" />
+                  <Sparkles className="w-4 h-4 text-indigo-400" />
                   <span>Discover Products</span>
                 </span>
-                <span className="bg-[#1A1A1A] border border-[#2A2A2A] text-[9px] px-1.5 py-0.5 rounded text-[#A1A1AA] font-sans">deck</span>
+                <span className="bg-[#0f172a] border border-slate-800 text-[9px] px-1.5 py-0.5 rounded text-slate-400 font-sans">deck</span>
               </button>
 
               <button
                 onClick={() => setActiveView('ideas')}
                 className={`w-full px-3 py-2.5 rounded-xl text-xs font-mono text-left flex items-center justify-between transition ${
-                  activeView === 'ideas' ? 'bg-[#1C1C1C] text-white font-bold' : 'text-zinc-400 hover:bg-[#111111] hover:text-white'
+                  activeView === 'ideas' ? 'bg-indigo-600/10 text-indigo-400 border border-indigo-600/20 shadow-sm shadow-indigo-500/10 font-bold' : 'text-slate-400 hover:bg-[#0f172a] hover:text-white border border-transparent'
                 }`}
               >
                 <span className="flex items-center gap-2">
-                  <Lightbulb className="w-4 h-4 text-[#F59E0B]" />
+                  <Lightbulb className="w-4 h-4 text-yellow-500" />
                   <span>Validate Ideas</span>
                 </span>
-                <span className="bg-[#1A1A1A] border border-[#2A2A2A] text-[9px] px-1.5 py-0.5 rounded text-[#A1A1AA] font-sans">deck</span>
+                <span className="bg-[#0f172a] border border-slate-800 text-[9px] px-1.5 py-0.5 rounded text-slate-400 font-sans">deck</span>
               </button>
 
               <button
                 onClick={() => setActiveView('founders')}
                 className={`w-full px-3 py-2.5 rounded-xl text-xs font-mono text-left flex items-center justify-between transition ${
-                  activeView === 'founders' ? 'bg-[#1C1C1C] text-white font-bold' : 'text-zinc-400 hover:bg-[#111111] hover:text-white'
+                  activeView === 'founders' ? 'bg-indigo-600/10 text-indigo-400 border border-indigo-600/20 shadow-sm shadow-indigo-500/10 font-bold' : 'text-slate-400 hover:bg-[#0f172a] hover:text-white border border-transparent'
                 }`}
               >
                 <span className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-[#22C55E]" />
+                  <Users className="w-4 h-4 text-emerald-400" />
                   <span>Connect Founders</span>
                 </span>
-                <span className="bg-[#1A1A1A] border border-[#2A2A2A] text-[9px] px-1.5 py-0.5 rounded text-[#A1A1AA] font-sans">deck</span>
+                <span className="bg-[#0f172a] border border-slate-800 text-[9px] px-1.5 py-0.5 rounded text-slate-400 font-sans">deck</span>
               </button>
             </div>
 
             {/* EXPLORE DIRECTORY GROUP */}
             <div className="space-y-1.5">
-              <span className="text-[10px] font-mono text-zinc-500 px-3 uppercase block tracking-wider">Explore</span>
+              <span className="text-[10px] font-mono text-slate-500 px-3 uppercase block tracking-wider">Explore</span>
 
               <button
                 onClick={() => setActiveView('explore')}
                 className={`w-full px-3 py-2.5 rounded-xl text-xs font-mono text-left flex items-center gap-2 transition ${
-                  activeView === 'explore' ? 'bg-[#1C1C1C] text-white font-bold' : 'text-zinc-400 hover:bg-[#111111] hover:text-white'
+                  activeView === 'explore' ? 'bg-indigo-600/10 text-indigo-400 border border-indigo-600/20 shadow-sm shadow-indigo-500/10 font-bold' : 'text-slate-400 hover:bg-[#0f172a] hover:text-white border border-transparent'
                 }`}
               >
                 <Compass className="w-4 h-4 text-purple-400" />
@@ -251,7 +252,7 @@ function DashboardShell() {
               <button
                 onClick={() => setActiveView('matches')}
                 className={`w-full px-3 py-2.5 rounded-xl text-xs font-mono text-left flex items-center justify-between transition ${
-                  activeView === 'matches' ? 'bg-[#1C1C1C] text-white font-bold' : 'text-zinc-400 hover:bg-[#111111] hover:text-white'
+                  activeView === 'matches' ? 'bg-indigo-600/10 text-indigo-400 border border-indigo-600/20 shadow-sm shadow-indigo-500/10 font-bold' : 'text-slate-400 hover:bg-[#0f172a] hover:text-white border border-transparent'
                 }`}
               >
                 <span className="flex items-center gap-2">
@@ -264,7 +265,7 @@ function DashboardShell() {
               <button
                 onClick={() => setActiveView('saves')}
                 className={`w-full px-3 py-2.5 rounded-xl text-xs font-mono text-left flex items-center gap-2 transition ${
-                  activeView === 'saves' ? 'bg-[#1C1C1C] text-white font-bold' : 'text-zinc-400 hover:bg-[#111111] hover:text-white'
+                  activeView === 'saves' ? 'bg-indigo-600/10 text-indigo-400 border border-indigo-600/20 shadow-sm shadow-indigo-500/10 font-bold' : 'text-slate-400 hover:bg-[#0f172a] hover:text-white border border-transparent'
                 }`}
               >
                 <Star className="w-4 h-4 text-yellow-500" />
@@ -274,14 +275,14 @@ function DashboardShell() {
 
             {/* SUBMISSIONS LAUNCH CONTROLS */}
             <div className="space-y-1.5">
-              <span className="text-[10px] font-mono text-zinc-500 px-3 uppercase block tracking-wider">Publish</span>
+              <span className="text-[10px] font-mono text-slate-500 px-3 uppercase block tracking-wider">Publish</span>
 
               <button
                 onClick={() => setActiveView('submit-product')}
                 className={`w-full px-3 py-2 rounded-xl text-xs font-mono text-left flex items-center gap-2 border transition ${
                   activeView === 'submit-product' 
-                    ? 'bg-[#1C1C1C] border-[#6366F1] text-white font-bold' 
-                    : 'bg-transparent border-[#2A2A2A] text-zinc-300 hover:border-zinc-700 hover:bg-[#111111]'
+                    ? 'bg-[#0f172a] border-indigo-600 text-white font-bold' 
+                    : 'bg-transparent border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-[#0f172a]'
                 }`}
               >
                 <Plus className="w-3.5 h-3.5" />
@@ -292,8 +293,8 @@ function DashboardShell() {
                 onClick={() => setActiveView('submit-idea')}
                 className={`w-full px-3 py-2 rounded-xl text-xs font-mono text-left flex items-center gap-2 border transition ${
                   activeView === 'submit-idea' 
-                    ? 'bg-[#1C1C1C] border-yellow-500 text-white font-bold' 
-                    : 'bg-transparent border-[#2A2A2A] text-zinc-300 hover:border-zinc-700 hover:bg-[#111111]'
+                    ? 'bg-[#0f172a] border-yellow-500 text-white font-bold' 
+                    : 'bg-transparent border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-[#0f172a]'
                 }`}
               >
                 <Plus className="w-3.5 h-3.5 text-yellow-500" />
@@ -304,38 +305,38 @@ function DashboardShell() {
           </div>
 
           {/* Account Profile Bottom settings */}
-          <div className="pt-4 border-t border-[#1C1C1C]">
+          <div className="pt-4 border-t border-slate-800">
             <button
               onClick={() => setActiveView('settings')}
               className={`w-full px-3 py-2.5 rounded-xl text-xs font-mono text-left flex items-center gap-2 transition ${
-                activeView === 'settings' ? 'bg-[#1C1C1C] text-white font-bold' : 'text-zinc-400 hover:bg-[#111111]'
+                activeView === 'settings' ? 'bg-indigo-600/10 border border-indigo-600/20 text-indigo-400 font-bold shadow-sm shadow-indigo-500/10' : 'text-slate-400 hover:bg-[#0f172a]'
               }`}
             >
-              <Settings className="w-4 h-4 text-zinc-500" />
+              <Settings className="w-4 h-4 text-slate-500" />
               <span>Settings Controls</span>
             </button>
           </div>
         </aside>
 
         {/* MOBILE NAVIGATION BAR (Shown only on small viewport across bottom) */}
-        <nav className="fixed bottom-0 left-0 right-0 bg-[#0A0A0A]/95 border-t border-[#2A2A2A] px-4 py-2 flex justify-around items-center z-30 md:hidden backdrop-blur-md">
-          <button onClick={() => setActiveView('products')} className={`flex flex-col items-center text-[8px] font-mono ${activeView === 'products' ? 'text-[#6366F1]' : 'text-zinc-500'}`}>
+        <nav className="fixed bottom-0 left-0 right-0 bg-[#020617]/95 border-t border-slate-800 px-4 py-2 flex justify-around items-center z-30 md:hidden backdrop-blur-md">
+          <button onClick={() => setActiveView('products')} className={`flex flex-col items-center text-[8px] font-mono ${activeView === 'products' ? 'text-indigo-400' : 'text-slate-500'}`}>
             <Sparkles className="w-4.5 h-4.5" />
             <span>Discover</span>
           </button>
-          <button onClick={() => setActiveView('explore')} className={`flex flex-col items-center text-[8px] font-mono ${activeView === 'explore' ? 'text-purple-400' : 'text-zinc-500'}`}>
+          <button onClick={() => setActiveView('explore')} className={`flex flex-col items-center text-[8px] font-mono ${activeView === 'explore' ? 'text-purple-400' : 'text-slate-500'}`}>
             <Compass className="w-4.5 h-4.5" />
             <span>Explore</span>
           </button>
-          <button onClick={() => setActiveView('matches')} className={`flex flex-col items-center text-[8px] font-mono ${activeView === 'matches' ? 'text-pink-400' : 'text-zinc-500'}`}>
+          <button onClick={() => setActiveView('matches')} className={`flex flex-col items-center text-[8px] font-mono ${activeView === 'matches' ? 'text-pink-400' : 'text-slate-500'}`}>
             <MessageSquare className="w-4.5 h-4.5" />
             <span>Inbox</span>
           </button>
-          <button onClick={() => setActiveView('saves')} className={`flex flex-col items-center text-[8px] font-mono ${activeView === 'saves' ? 'text-yellow-500' : 'text-zinc-500'}`}>
+          <button onClick={() => setActiveView('saves')} className={`flex flex-col items-center text-[8px] font-mono ${activeView === 'saves' ? 'text-yellow-500' : 'text-slate-500'}`}>
             <Star className="w-4.5 h-4.5" />
             <span>Saves</span>
           </button>
-          <button onClick={() => setActiveView('settings')} className={`flex flex-col items-center text-[8px] font-mono ${activeView === 'settings' ? 'text-zinc-400' : 'text-zinc-500'}`}>
+          <button onClick={() => setActiveView('settings')} className={`flex flex-col items-center text-[8px] font-mono ${activeView === 'settings' ? 'text-indigo-400' : 'text-slate-500'}`}>
             <Settings className="w-4.5 h-4.5" />
             <span>Settings</span>
           </button>
@@ -449,16 +450,25 @@ function DashboardShell() {
 
               {/* Saved Products */}
               <div className="space-y-4">
-                <span className="text-xs font-mono text-[#FAFAFA] uppercase block border-b border-[#2A2A2A] pb-1">Saved Products</span>
+                <span className="text-xs font-mono text-[#FAFAFA] uppercase block border-b border-slate-800 pb-1">Saved Products</span>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {savedProductIds.length === 0 ? (
-                    <p className="text-xs text-zinc-500 italic">No saved products yet. Swipe Up on cards to save.</p>
+                    <div className="col-span-full">
+                      <EmptyState
+                        icon={Sparkles}
+                        title="No Saved Products"
+                        description="You haven't saved any micro-SaaS products yet. Swipe up on product cards in the Discover deck to add them to your watchlist."
+                        actionText="Discover Products"
+                        onActionClick={() => setActiveView('products')}
+                        badge="Watchlist Empty"
+                      />
+                    </div>
                   ) : (
                     products.filter(p => savedProductIds.includes(p.id)).map(p => (
                       <div
                         key={p.id}
                         onClick={() => setSelectedProduct(p)}
-                        className="bg-[#111111] border border-[#2A2A2A] rounded-xl p-5 hover:border-[#6366F1]/50 transition duration-300 cursor-pointer flex flex-col justify-between h-40 text-left"
+                        className="bg-[#111111] border border-slate-800 rounded-xl p-5 hover:border-indigo-600/50 transition duration-300 cursor-pointer flex flex-col justify-between h-40 text-left"
                       >
                         <div className="space-y-2">
                           <span className="text-lg w-8 h-8 rounded-lg bg-zinc-800/20 flex items-center justify-center">{p.logoUrl}</span>
@@ -474,16 +484,28 @@ function DashboardShell() {
 
               {/* Saved Ideas */}
               <div className="space-y-4 pt-4">
-                <span className="text-xs font-mono text-[#FAFAFA] uppercase block border-b border-[#2A2A2A] pb-1">Saved Ideas</span>
+                <span className="text-xs font-mono text-[#FAFAFA] uppercase block border-b border-slate-800 pb-1">Saved Ideas</span>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {savedIdeaIds.length === 0 ? (
-                    <p className="text-xs text-zinc-500 italic">No saved ideas yet. Swipe Up on ideas cards to save.</p>
+                    <div className="col-span-full">
+                      <EmptyState
+                        icon={Lightbulb}
+                        title="No Saved Ideas"
+                        description="You haven't saved any validation pitches yet. Swipe up on raw ideas in the Validate deck to keep track of them."
+                        actionText="Validate Ideas"
+                        onActionClick={() => setActiveView('ideas')}
+                        badge="Watchlist Empty"
+                        iconColorClass="text-amber-400"
+                        borderColorClass="border-amber-500/20"
+                        glowColorClass="bg-amber-500/10"
+                      />
+                    </div>
                   ) : (
                     ideas.filter(i => savedIdeaIds.includes(i.id)).map(i => (
                       <div
                         key={i.id}
                         onClick={() => setSelectedIdea(i)}
-                        className="bg-[#111111] border border-[#2A2A2A] rounded-xl p-5 hover:border-yellow-500/50 transition duration-300 cursor-pointer flex flex-col justify-between h-40 text-left"
+                        className="bg-[#111111] border border-slate-800 rounded-xl p-5 hover:border-yellow-500/50 transition duration-300 cursor-pointer flex flex-col justify-between h-40 text-left"
                       >
                         <div className="space-y-2">
                           <span className="text-[9px] font-mono text-zinc-500 block">by @{i.authorUsername}</span>
@@ -508,20 +530,25 @@ function DashboardShell() {
           {/* Backdrop */}
           <div className="fixed inset-0 bg-black/50" onClick={() => setNotifDrawerOpen(false)} />
           
-          <div className="relative w-80 h-full bg-[#111111] border-l border-[#2A2A2A] p-5 shadow-2xl flex flex-col gap-4 overflow-y-auto z-10 animate-slide-in text-left">
-            <div className="flex justify-between items-center pb-2 border-b border-[#2A2A2A]">
+          <div className="relative w-85 h-full bg-[#020617] border-l border-slate-800 p-5 shadow-2xl flex flex-col gap-4 overflow-y-auto z-10 animate-slide-in text-left">
+            <div className="flex justify-between items-center pb-2 border-b border-slate-800">
               <span className="text-xs font-black text-white font-mono flex items-center gap-1.5">
-                <Bell className="w-4 h-4 text-[#6366F1]" />
+                <Bell className="w-4 h-4 text-indigo-400" />
                 <span>NOTIFICATIONS</span>
               </span>
-              <button onClick={() => setNotifDrawerOpen(false)} className="p-1 rounded-md hover:bg-[#1A1A1A] text-zinc-400">
+              <button onClick={() => setNotifDrawerOpen(false)} className="p-1 rounded-md hover:bg-slate-800 text-slate-400">
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             <div className="flex-1 space-y-3">
               {notifications.length === 0 ? (
-                <p className="text-xs text-zinc-500 italic text-center py-12">No notifications found.</p>
+                <EmptyState
+                  icon={Bell}
+                  title="Inbox is Clear"
+                  description="No new updates or alerts at the moment. We'll notify you when co-builders match or when your ideas gain validation upvotes!"
+                  badge="Quiet Mode"
+                />
               ) : (
                 notifications.map(n => (
                   <div 

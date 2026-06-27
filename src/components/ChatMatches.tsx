@@ -6,7 +6,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useApp } from '../context/AppContext';
 import { Match, Message } from '../types';
-import { Send, CheckCheck, Users, HelpCircle, Building2, ChevronRight, CheckSquare, Square, CreditCard, Sparkles } from 'lucide-react';
+import { Send, CheckCheck, Users, HelpCircle, Building2, ChevronRight, CheckSquare, Square, CreditCard, Sparkles, MessageSquare } from 'lucide-react';
+import { EmptyState } from './EmptyState';
 
 export const ChatMatches: React.FC = () => {
   const { 
@@ -85,11 +86,15 @@ export const ChatMatches: React.FC = () => {
           </h3>
         </div>
 
-        <div className="flex-1 overflow-y-auto divide-y divide-[#1C1C1C]">
+        <div className="flex-1 overflow-y-auto divide-y divide-slate-800">
           {matches.length === 0 ? (
-            <div className="text-center py-12 px-4 text-zinc-500">
-              <p className="text-xs">No active matches found.</p>
-              <p className="text-[10px] mt-1">Start swiping on co-builders and products to spark conversations!</p>
+            <div className="p-4">
+              <EmptyState
+                icon={Users}
+                title="No Active Matches"
+                description="Swipe right on founders or products to start a conversation!"
+                badge="Inbox Empty"
+              />
             </div>
           ) : (
             matches.map(m => {
@@ -265,9 +270,13 @@ export const ChatMatches: React.FC = () => {
             </form>
           </div>
         ) : (
-          <div className="flex-1 flex flex-col justify-center items-center text-zinc-500 text-xs">
-            <Users className="w-10 h-10 text-zinc-700 mb-2 animate-pulse" />
-            <p>Select a match on the left sidebar to access chat logs.</p>
+          <div className="flex-1 flex flex-col justify-center items-center p-6 bg-slate-950/20">
+            <EmptyState
+              icon={MessageSquare}
+              title="Secure DM Chat Workspace"
+              description="Select an active partner match or product acquisition query from the left sidebar to access communication history and draft binding terms."
+              badge="Encrypted Channel"
+            />
           </div>
         )}
 

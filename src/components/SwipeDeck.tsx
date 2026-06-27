@@ -102,23 +102,22 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({ deckType, cards, onSwipe, 
     }
   };
 
-  // Quota Exceeded Block View
   if (currentUser?.plan === 'free' && swipesCountToday >= 20) {
     return (
-      <div className="w-full max-w-[350px] aspect-[4/5] bg-[#111111] border border-[#2A2A2A] rounded-2xl p-6 flex flex-col justify-between text-center shadow-xl">
+      <div className="w-full max-w-[350px] aspect-[4/5] bg-[#0f172a] border border-slate-800 rounded-2xl p-6 flex flex-col justify-between text-center shadow-xl">
         <div className="my-auto space-y-4">
-          <div className="w-16 h-16 rounded-full bg-[#6366F1]/10 text-[#6366F1] flex items-center justify-center mx-auto shadow-inner">
-            <Zap className="w-8 h-8 fill-[#6366F1]" />
+          <div className="w-16 h-16 rounded-full bg-indigo-600/10 text-indigo-400 flex items-center justify-center mx-auto shadow-inner">
+            <Zap className="w-8 h-8 fill-indigo-600" />
           </div>
           <h3 className="text-xl font-black text-white">Daily Limit Reached!</h3>
-          <p className="text-sm text-[#A1A1AA] leading-relaxed max-w-xs mx-auto">
+          <p className="text-sm text-slate-400 leading-relaxed max-w-xs mx-auto">
             You have used up your <strong className="text-white">20 free swipes</strong> for today. Upgrade to Pro to get unlimited swipe access and match with co-builders immediately!
           </p>
         </div>
 
         <button
           onClick={upgradeToPro}
-          className="w-full bg-[#6366F1] hover:bg-[#4F46E5] text-white py-3 rounded-xl font-bold transition flex items-center justify-center gap-1.5 shadow-lg shadow-[#6366F1]/20 cursor-pointer"
+          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold transition flex items-center justify-center gap-1.5 shadow-lg shadow-indigo-500/20 cursor-pointer"
         >
           <span>Upgrade to Pro ($12/mo)</span>
           <Sparkles className="w-4 h-4 fill-white" />
@@ -130,20 +129,20 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({ deckType, cards, onSwipe, 
   // End of Queue Empty State
   if (cards.length === 0 || currentIndex >= cards.length) {
     return (
-      <div className="w-full max-w-[350px] aspect-[4/5] bg-[#111111] border border-[#2A2A2A] rounded-2xl p-6 flex flex-col justify-between text-center shadow-xl">
+      <div className="w-full max-w-[350px] aspect-[4/5] bg-[#0f172a] border border-slate-800 rounded-2xl p-6 flex flex-col justify-between text-center shadow-xl">
         <div className="my-auto space-y-4">
-          <div className="w-16 h-16 rounded-full bg-zinc-800 text-zinc-500 flex items-center justify-center mx-auto">
+          <div className="w-16 h-16 rounded-full bg-slate-800 text-slate-500 flex items-center justify-center mx-auto">
             <RefreshCw className="w-8 h-8" />
           </div>
           <h3 className="text-lg font-bold text-white">End of the Deck</h3>
-          <p className="text-xs text-[#A1A1AA] leading-relaxed max-w-xs mx-auto">
+          <p className="text-xs text-slate-400 leading-relaxed max-w-xs mx-auto">
             You have swiped on everything in the <span className="font-mono text-white font-bold">{deckType}</span> deck. Come back tomorrow for freshly submitted side projects or change filters inside directory explorer.
           </p>
         </div>
 
         <button
           onClick={() => window.location.reload()}
-          className="w-full bg-[#1A1A1A] border border-[#2A2A2A] text-xs text-white hover:border-[#6366F1] py-3 rounded-xl font-mono transition"
+          className="w-full bg-slate-800 border border-slate-800 text-xs text-white hover:border-indigo-600 py-3 rounded-xl font-mono transition"
         >
           RESET SWIPED LOGS
         </button>
@@ -159,7 +158,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({ deckType, cards, onSwipe, 
       
       {/* Background card peek (Next Card) */}
       {nextCard && (
-        <div className="absolute inset-0 bg-[#141414] border border-[#1F1F1F] rounded-2xl p-6 shadow-md scale-[0.96] translate-y-3 opacity-60 flex flex-col justify-between pointer-events-none z-0">
+        <div className="absolute inset-0 bg-[#0f172a]/60 border border-slate-800/80 rounded-2xl p-6 shadow-md scale-[0.96] translate-y-3 opacity-60 flex flex-col justify-between pointer-events-none z-0">
           <CardLayout deckType={deckType} card={nextCard} />
         </div>
       )}
@@ -172,7 +171,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({ deckType, cards, onSwipe, 
         style={{ x, y, rotate, opacity }}
         animate={controls}
         whileDrag={{ scale: 1.02 }}
-        className="absolute inset-0 bg-[#111111] border border-[#2A2A2A] rounded-2xl p-6 shadow-2xl flex flex-col justify-between hover:border-[#6366F1]/40 transition duration-200 cursor-grab active:cursor-grabbing z-10 overflow-hidden"
+        className="absolute inset-0 bg-[#0f172a] border border-slate-800 rounded-2xl p-6 shadow-2xl flex flex-col justify-between hover:border-indigo-600/40 transition duration-200 cursor-grab active:cursor-grabbing z-10 overflow-hidden"
       >
         {/* Dynamic Drag Hint Overlays */}
         {/* RIGHT (Upvote) */}
@@ -180,7 +179,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({ deckType, cards, onSwipe, 
           style={{ opacity: rightOpacity }}
           className="absolute inset-0 bg-green-500/10 border-2 border-green-500 pointer-events-none rounded-2xl flex items-center justify-center z-20"
         >
-          <div className="bg-[#111111]/90 border border-green-500 text-green-500 font-mono font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-lg scale-110">
+          <div className="bg-[#0f172a]/90 border border-green-500 text-green-500 font-mono font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-lg scale-110">
             <Heart className="w-5 h-5 fill-green-500" />
             <span>UPVOTE</span>
           </div>
@@ -191,7 +190,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({ deckType, cards, onSwipe, 
           style={{ opacity: leftOpacity }}
           className="absolute inset-0 bg-red-500/10 border-2 border-red-500 pointer-events-none rounded-2xl flex items-center justify-center z-20"
         >
-          <div className="bg-[#111111]/90 border border-red-500 text-red-500 font-mono font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-lg scale-110">
+          <div className="bg-[#0f172a]/90 border border-red-500 text-red-500 font-mono font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-lg scale-110">
             <X className="w-5 h-5" />
             <span>SKIP</span>
           </div>
@@ -202,7 +201,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({ deckType, cards, onSwipe, 
           style={{ opacity: upOpacity }}
           className="absolute inset-0 bg-yellow-500/10 border-2 border-yellow-500 pointer-events-none rounded-2xl flex items-center justify-center z-20"
         >
-          <div className="bg-[#111111]/90 border border-yellow-500 text-yellow-500 font-mono font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-lg scale-110">
+          <div className="bg-[#0f172a]/90 border border-yellow-500 text-yellow-500 font-mono font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-lg scale-110">
             <Star className="w-5 h-5 fill-yellow-500" />
             <span>SAVE</span>
           </div>
@@ -214,10 +213,10 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({ deckType, cards, onSwipe, 
         </div>
 
         {/* Visual action buttons (Desktop/Mobile alternative to dragging) */}
-        <div className="flex justify-around items-center border-t border-[#1C1C1C] pt-3 mt-4 gap-2 z-30">
+        <div className="flex justify-around items-center border-t border-slate-800 pt-3 mt-4 gap-2 z-30">
           <button
             onClick={() => triggerAnimatedSwipe('left', currentCard)}
-            className="w-11 h-11 rounded-full bg-[#1A1A1A] hover:bg-[#252525] border border-[#2A2A2A] hover:border-red-500/50 text-red-500 flex items-center justify-center transition active:scale-90"
+            className="w-11 h-11 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-800 hover:border-red-500/50 text-red-500 flex items-center justify-center transition active:scale-90"
             title="ArrowLeft (Skip)"
           >
             <X className="w-5 h-5" />
@@ -225,7 +224,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({ deckType, cards, onSwipe, 
           
           <button
             onClick={() => triggerAnimatedSwipe('up', currentCard)}
-            className="w-10 h-10 rounded-full bg-[#1A1A1A] hover:bg-[#252525] border border-[#2A2A2A] hover:border-yellow-500/50 text-yellow-500 flex items-center justify-center transition active:scale-90"
+            className="w-10 h-10 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-800 hover:border-yellow-500/50 text-yellow-500 flex items-center justify-center transition active:scale-90"
             title="ArrowUp (Save)"
           >
             <Star className="w-4 h-4" />
@@ -233,7 +232,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({ deckType, cards, onSwipe, 
 
           <button
             onClick={() => triggerAnimatedSwipe('right', currentCard)}
-            className="w-11 h-11 rounded-full bg-[#1A1A1A] hover:bg-[#252525] border border-[#2A2A2A] hover:border-green-500/50 text-green-500 flex items-center justify-center transition active:scale-90"
+            className="w-11 h-11 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-800 hover:border-green-500/50 text-green-500 flex items-center justify-center transition active:scale-90"
             title="ArrowRight (Upvote)"
           >
             <Heart className="w-5 h-5 fill-green-500" />
@@ -275,14 +274,14 @@ const ProductCardContent: React.FC<{ product: any }> = ({ product }) => {
               for sale
             </span>
           ) : (
-            <span className="bg-[#6366F1]/10 text-[#6366F1] border border-[#6366F1]/20 text-[9px] font-mono px-2 py-0.5 rounded-full uppercase">
+            <span className="bg-indigo-600/10 text-indigo-400 border border-indigo-600/20 text-[9px] font-mono px-2 py-0.5 rounded-full uppercase">
               {product.status}
             </span>
           )}
         </div>
 
         {/* Tagline */}
-        <p className="text-sm text-[#FAFAFA] font-medium leading-relaxed line-clamp-3">
+        <p className="text-sm text-slate-100 font-medium leading-relaxed line-clamp-3">
           &ldquo;{product.tagline}&rdquo;
         </p>
 
@@ -290,7 +289,7 @@ const ProductCardContent: React.FC<{ product: any }> = ({ product }) => {
         <div className="space-y-2 pt-1">
           <div className="flex flex-wrap gap-1">
             {product.primaryStack.slice(0, 3).map((s: string) => (
-              <span key={s} className="bg-[#1A1A1A] border border-[#2A2A2A] text-[9px] font-mono px-2 py-0.5 rounded text-[#A1A1AA]">
+              <span key={s} className="bg-slate-800 border border-slate-800 text-[9px] font-mono px-2 py-0.5 rounded text-slate-400">
                 {s}
               </span>
             ))}
@@ -398,16 +397,16 @@ const FounderCardContent: React.FC<{ founder: any }> = ({ founder }) => {
             <img 
               src={founder.avatarUrl} 
               alt={founder.displayName} 
-              className="w-10 h-10 rounded-xl object-cover border border-[#2A2A2A]"
+              className="w-10 h-10 rounded-xl object-cover border border-slate-800"
             />
             <div>
               <h4 className="text-sm font-black text-white flex items-center gap-1">
                 <span>{founder.displayName}</span>
                 {founder.isVerified && (
-                  <span className="w-3.5 h-3.5 rounded-full bg-[#6366F1] text-white flex items-center justify-center text-[8px] font-mono" title="Verified Creator">✓</span>
+                  <span className="w-3.5 h-3.5 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[8px] font-mono" title="Verified Creator">✓</span>
                 )}
               </h4>
-              <p className="text-[9px] text-[#A1A1AA] font-mono">@{founder.username} · {founder.location}</p>
+              <p className="text-[9px] text-slate-400 font-mono">@{founder.username} · {founder.location}</p>
             </div>
           </div>
 
@@ -419,7 +418,7 @@ const FounderCardContent: React.FC<{ founder: any }> = ({ founder }) => {
         </div>
 
         {/* Tagline */}
-        <p className="text-xs text-[#FAFAFA] font-medium leading-relaxed line-clamp-3">
+        <p className="text-xs text-slate-100 font-medium leading-relaxed line-clamp-3">
           &ldquo;{founder.tagline}&rdquo;
         </p>
 
@@ -428,7 +427,7 @@ const FounderCardContent: React.FC<{ founder: any }> = ({ founder }) => {
           <p className="text-[9px] font-mono text-[#52525B]">BUILDING WITH:</p>
           <div className="flex flex-wrap gap-1">
             {founder.primaryStack.slice(0, 3).map((s: string) => (
-              <span key={s} className="bg-[#1A1A1A] border border-[#2A2A2A] text-[9px] font-mono px-2 py-0.5 rounded text-[#A1A1AA]">
+              <span key={s} className="bg-slate-800 border border-slate-800 text-[9px] font-mono px-2 py-0.5 rounded text-slate-400">
                 {s}
               </span>
             ))}
@@ -441,7 +440,7 @@ const FounderCardContent: React.FC<{ founder: any }> = ({ founder }) => {
         <p className="text-[9px] font-mono text-[#52525B]">LOOKING FOR:</p>
         <div className="flex flex-wrap gap-1">
           {founder.lookingFor.slice(0, 3).map((item: string) => (
-            <span key={item} className="bg-[#6366F1]/10 text-[#6366F1] text-[9px] font-mono px-2 py-0.5 rounded border border-[#6366F1]/10">
+            <span key={item} className="bg-indigo-600/10 text-indigo-400 text-[9px] font-mono px-2 py-0.5 rounded border border-indigo-600/10">
               {item === 'collab' && '🤝 co-builder'}
               {item === 'beta_test' && '🧪 beta testers'}
               {item === 'acquire' && '💰 acquire deals'}
